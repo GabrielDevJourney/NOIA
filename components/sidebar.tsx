@@ -57,9 +57,6 @@ export function Sidebar({
           <h1 className="font-serif text-2xl italic tracking-tight text-foreground">
             NOIA
           </h1>
-          <p className="text-sm text-muted-foreground">
-            two of your own notes, one new concept.
-          </p>
         </div>
 
         <button
