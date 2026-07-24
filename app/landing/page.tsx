@@ -2,6 +2,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { HeroConvergence } from "@/components/landing/hero-convergence";
+import { HowItWorks } from "@/components/landing/how-it-works";
 import type { ConnectionWithCards } from "@/lib/types";
 
 const realExample: ConnectionWithCards = {
@@ -16,12 +17,6 @@ const realExample: ConnectionWithCards = {
   card_1: null,
   card_2: null,
 };
-
-const HOW_IT_WORKS = [
-  { number: "01", label: "add notes you've already saved" },
-  { number: "02", label: "the app picks two" },
-  { number: "03", label: "get back one new concept connecting them" },
-];
 
 export default function LandingPage() {
   return (
@@ -49,25 +44,17 @@ export default function LandingPage() {
       </section>
 
       <section className="pt-16 sm:pt-20">
-        <div className="mx-auto flex max-w-[65ch] flex-col gap-3">
-          {HOW_IT_WORKS.map((step) => (
-            <div key={step.number} className="flex items-baseline gap-3">
-              <span className="font-sans text-xs text-muted-foreground">
-                {step.number}
-              </span>
-              <span className="text-base text-foreground">{step.label}</span>
-            </div>
-          ))}
-        </div>
+        <HowItWorks />
       </section>
 
-      <section className="mt-20 flex flex-col items-center text-center sm:mt-24">
+      <section className="mt-20 flex flex-col items-center gap-3 text-center sm:mt-24">
         <Link
           href="/"
           className={cn(buttonVariants({ variant: "default" }), "h-11 px-6 text-base")}
         >
           Open the app
         </Link>
+        <p className="text-sm text-muted-foreground">no signup, straight into your notes.</p>
       </section>
 
       <footer className="pt-16 text-xs text-muted-foreground">
