@@ -12,20 +12,11 @@ const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 const FRAGMENT_A = "…a shitty data set, guilt and regret.";
 const FRAGMENT_B = "…people i am around and people i would like to be around.";
 
-const ASCII_DIAGRAM = `┌─ note ─┐   ┌─ note ─┐
-│ …regret │ + │ …people │
-└────┬────┘   └────┬────┘
-     └──────┬───────┘
-      ┌─────▼──────────┐
-      │  Redirection    │
-      │  Playground     │
-      └─────────────────┘`;
-
 // The fragments must sit still long enough to actually be read (two short
 // sentences, two saccades) before the convergence begins.
 const HOLD_MS = 4200;
 const CONVERGE_MS = HOLD_MS + 150;
-const RESOLVE_MS = CONVERGE_MS + 750;
+const RESOLVE_MS = CONVERGE_MS + 1750;
 
 type Stage = "rest" | "converge" | "resolved";
 type GlowStage = "hidden" | "bloom" | "breathe";
@@ -53,8 +44,8 @@ export function HeroConvergence({ example }: { example: ConnectionWithCards }) {
     : glowStage === "hidden"
       ? { opacity: 0, scale: 0.5 }
       : glowStage === "bloom"
-        ? { opacity: [0, 0.6, 0.42], scale: [0.5, 1.15, 1] }
-        : { opacity: [0.42, 0.58, 0.42], scale: [1, 1.05, 1] };
+        ? { opacity: [0, 0.75, 0.5], scale: [0.5, 1.15, 1] }
+        : { opacity: [0.5, 0.75, 0.5], scale: [1, 1.05, 1] };
 
   const glowTransition =
     !reduceMotion && glowStage === "breathe"
@@ -64,6 +55,18 @@ export function HeroConvergence({ example }: { example: ConnectionWithCards }) {
   return (
     <div className="flex w-full max-w-2xl flex-col items-center gap-8">
       <div className="relative h-64 w-full sm:h-72">
+        <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+          <motion.div
+            className="h-56 w-56 rounded-full bg-primary blur-2xl sm:h-64 sm:w-64"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={glowAnimate}
+            transition={glowTransition}
+            onAnimationComplete={() => {
+              if (!reduceMotion) setGlowStage((s) => (s === "bloom" ? "breathe" : s));
+            }}
+          />
+        </div>
+
         <AnimatePresence mode="wait">
           {stage !== "resolved" ? (
             <motion.div
@@ -72,28 +75,16 @@ export function HeroConvergence({ example }: { example: ConnectionWithCards }) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
-                <motion.div
-                  className="h-40 w-40 rounded-full bg-primary blur-3xl"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={glowAnimate}
-                  transition={glowTransition}
-                  onAnimationComplete={() => {
-                    if (!reduceMotion) setGlowStage((s) => (s === "bloom" ? "breathe" : s));
-                  }}
-                />
-              </div>
-
               <div className="absolute left-0 top-1/2 w-[45%] max-w-sm -translate-y-1/2 sm:left-4">
                 <motion.div
                   className="rounded-xl border border-border bg-card p-5 text-base font-sans text-card-foreground shadow-sm sm:p-6"
-                  initial={{ x: 0, rotate: reduceMotion ? 0 : -2, scale: 1, opacity: 1 }}
+                  initial={{ x: 0, y: reduceMotion ? 0 : -80, rotate: reduceMotion ? 0 : -2, scale: 1, opacity: 0 }}
                   animate={
                     stage === "rest"
-                      ? { x: 0, rotate: reduceMotion ? 0 : -2, scale: 1, opacity: 1 }
+                      ? { x: 0, y: 0, rotate: reduceMotion ? 0 : -2, scale: 1, opacity: 1 }
                       : reduceMotion
-                        ? { x: 0, rotate: 0, scale: 1, opacity: 0 }
-                        : { x: 72, rotate: 0, scale: 0.5, opacity: 0 }
+                        ? { x: 0, y: 0, rotate: 0, scale: 1, opacity: 0 }
+                        : { x: 72, y: 0, rotate: 0, scale: 0.5, opacity: 0 }
                   }
                   transition={
                     reduceMotion
@@ -108,18 +99,18 @@ export function HeroConvergence({ example }: { example: ConnectionWithCards }) {
               <div className="absolute right-0 top-1/2 w-[45%] max-w-sm -translate-y-1/2 sm:right-4">
                 <motion.div
                   className="rounded-xl border border-border bg-card p-5 text-base font-sans text-card-foreground shadow-sm sm:p-6"
-                  initial={{ x: 0, rotate: reduceMotion ? 0 : 2, scale: 1, opacity: 1 }}
+                  initial={{ x: 0, y: reduceMotion ? 0 : -80, rotate: reduceMotion ? 0 : 2, scale: 1, opacity: 0 }}
                   animate={
                     stage === "rest"
-                      ? { x: 0, rotate: reduceMotion ? 0 : 2, scale: 1, opacity: 1 }
+                      ? { x: 0, y: 0, rotate: reduceMotion ? 0 : 2, scale: 1, opacity: 1 }
                       : reduceMotion
-                        ? { x: 0, rotate: 0, scale: 1, opacity: 0 }
-                        : { x: -72, rotate: 0, scale: 0.5, opacity: 0 }
+                        ? { x: 0, y: 0, rotate: 0, scale: 1, opacity: 0 }
+                        : { x: -72, y: 0, rotate: 0, scale: 0.5, opacity: 0 }
                   }
                   transition={
                     reduceMotion
                       ? { duration: 0.5, ease: "easeInOut" as const }
-                      : { type: "spring", bounce: 0, duration: 0.7 }
+                      : { type: "spring", bounce: 0, duration: 0.7, delay: 0.1 }
                   }
                 >
                   <p className="line-clamp-4 leading-relaxed">{FRAGMENT_B}</p>
@@ -134,19 +125,14 @@ export function HeroConvergence({ example }: { example: ConnectionWithCards }) {
         </AnimatePresence>
       </div>
 
-      {stage === "resolved" ? (
-        <motion.pre
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          aria-hidden="true"
-          className="font-mono text-[11px] leading-[1.4] text-muted-foreground sm:text-xs"
-        >
-          {ASCII_DIAGRAM}
-        </motion.pre>
-      ) : null}
-
-      <CtaLink />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: stage === "resolved" ? 1 : 0 }}
+        transition={{ duration: 0.4 }}
+        style={{ pointerEvents: stage === "resolved" ? "auto" : "none" }}
+      >
+        <CtaLink />
+      </motion.div>
     </div>
   );
 }
