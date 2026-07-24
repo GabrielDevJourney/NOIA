@@ -170,7 +170,7 @@ function ResolvedCard({
 function CtaLink() {
   return (
     <Link
-      href="/"
+      href="/app"
       className={cn(buttonVariants({ variant: "default" }), "h-11 px-6 text-base")}
     >
       Open the app

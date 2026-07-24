@@ -18,7 +18,7 @@ const realExample: ConnectionWithCards = {
   card_2: null,
 };
 
-export default function LandingPage() {
+export default function Home() {
   return (
     <div className="mx-auto flex max-w-4xl flex-col px-6 pb-24 pt-6 sm:pt-8">
       <nav className="flex h-16 items-center sm:h-[72px]">
@@ -49,7 +49,7 @@ export default function LandingPage() {
 
       <section className="mt-20 flex flex-col items-center gap-3 text-center sm:mt-24">
         <Link
-          href="/"
+          href="/app"
           className={cn(buttonVariants({ variant: "default" }), "h-11 px-6 text-base")}
         >
           Open the app
