@@ -117,18 +117,15 @@ export function ConnectView({ cards }: { cards: Card[] }) {
   }
 
   return (
-    <div className="relative w-full">
-      {showResult && (
-        <Button
-          onClick={handleRetry}
-          variant="ghost"
-          size="sm"
-          className="absolute right-2 top-2 z-10"
-        >
-          New concept
-        </Button>
-      )}
-      <div className="relative flex min-h-[22rem] w-full flex-col items-center justify-center">
+    <div className="flex h-full w-full flex-col">
+      <div className="flex h-12 shrink-0 items-center justify-end">
+        {showResult && (
+          <Button onClick={handleConnect} size="sm">
+            New concept
+          </Button>
+        )}
+      </div>
+      <div className="relative flex min-h-[22rem] w-full flex-1 flex-col items-center justify-center">
         <AnimatePresence initial={false}>
           {phase === "idle" && (
             <motion.div
@@ -243,26 +240,52 @@ function GatherAnimation({
 
   return (
     <div className="relative h-64 w-full sm:h-72">
-      <div className="absolute inset-0 flex items-center justify-center">
-        {glowStage !== "hidden" && (
-          <motion.div
-            className="absolute h-40 w-40 rounded-full blur-md"
-            style={{
-              background:
-                "conic-gradient(from 0deg, transparent, var(--primary) 60deg, transparent 120deg)",
-            }}
-            initial={{ opacity: 0, rotate: 0 }}
-            animate={{ opacity: 0.7, rotate: 360 }}
-            transition={{
-              opacity: { duration: 0.5, ease: EASE_OUT },
-              rotate: {
-                duration: 3.8,
-                repeat: Infinity,
-                ease: "linear",
-              },
-            }}
+      <svg className="absolute h-0 w-0" aria-hidden="true">
+        <filter id="noia-merge-goo">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur" />
+          <feColorMatrix
+            in="blur"
+            mode="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
+            result="goo"
           />
-        )}
+          <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+        </filter>
+      </svg>
+
+      <div className="absolute inset-0 flex items-center justify-center">
+        <AnimatePresence>
+          {glowStage === "bloom" && (
+            <motion.div
+              key="merge-blobs"
+              className="absolute inset-0 flex items-center justify-center"
+              style={{ filter: "url(#noia-merge-goo)" }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <motion.div
+                className="absolute h-20 w-20 rounded-full bg-primary"
+                initial={{ x: -64, scale: 0.4, opacity: 0 }}
+                animate={{
+                  x: [-64, -28, -6],
+                  scale: [0.4, 0.75, 0.95],
+                  opacity: [0, 1, 1],
+                }}
+                transition={{ duration: 0.5, ease: EASE_OUT }}
+              />
+              <motion.div
+                className="absolute h-20 w-20 rounded-full bg-primary"
+                initial={{ x: 64, scale: 0.4, opacity: 0 }}
+                animate={{
+                  x: [64, 28, 6],
+                  scale: [0.4, 0.75, 0.95],
+                  opacity: [0, 1, 1],
+                }}
+                transition={{ duration: 0.5, ease: EASE_OUT }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
         <motion.div
           className="h-40 w-40 rounded-full bg-primary blur-3xl"
           initial={{ opacity: 0, scale: 0.5 }}
