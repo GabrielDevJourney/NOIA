@@ -97,8 +97,8 @@ export function HeroConvergence({ example }: { example: ConnectionWithCards }) {
                   }
                   transition={
                     reduceMotion
-                      ? { duration: 0.3, ease: "easeInOut" as const }
-                      : { type: "spring", bounce: 0, duration: 0.35 }
+                      ? { duration: 0.5, ease: "easeInOut" as const }
+                      : { type: "spring", bounce: 0, duration: 0.7 }
                   }
                 >
                   <p className="line-clamp-4 leading-relaxed">{FRAGMENT_A}</p>
@@ -118,8 +118,8 @@ export function HeroConvergence({ example }: { example: ConnectionWithCards }) {
                   }
                   transition={
                     reduceMotion
-                      ? { duration: 0.3, ease: "easeInOut" as const }
-                      : { type: "spring", bounce: 0, duration: 0.35 }
+                      ? { duration: 0.5, ease: "easeInOut" as const }
+                      : { type: "spring", bounce: 0, duration: 0.7 }
                   }
                 >
                   <p className="line-clamp-4 leading-relaxed">{FRAGMENT_B}</p>
@@ -128,18 +128,36 @@ export function HeroConvergence({ example }: { example: ConnectionWithCards }) {
             </motion.div>
           ) : (
             <div key="resolved" className="absolute inset-0 flex items-center justify-center">
-              <ResolvedCard reduceMotion={!!reduceMotion} />
+              <ResolvedCard reduceMotion={!!reduceMotion} example={example} />
             </div>
           )}
         </AnimatePresence>
       </div>
+
+      {stage === "resolved" ? (
+        <motion.pre
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          aria-hidden="true"
+          className="font-mono text-[11px] leading-[1.4] text-muted-foreground sm:text-xs"
+        >
+          {ASCII_DIAGRAM}
+        </motion.pre>
+      ) : null}
 
       <CtaLink />
     </div>
   );
 }
 
-function ResolvedCard({ reduceMotion }: { reduceMotion?: boolean }) {
+function ResolvedCard({
+  reduceMotion,
+  example,
+}: {
+  reduceMotion?: boolean;
+  example: ConnectionWithCards;
+}) {
   return (
     <motion.div
       initial={
@@ -154,10 +172,10 @@ function ResolvedCard({ reduceMotion }: { reduceMotion?: boolean }) {
       className="w-full max-w-sm rounded-xl border border-border bg-card px-8 py-10 text-center sm:px-12 sm:py-14"
     >
       <p className="pb-1 font-serif text-2xl italic leading-[1.15] text-card-foreground sm:text-3xl">
-        NOIA
+        {example.concept_name}
       </p>
-      <p className="mx-auto mt-3 max-w-xs text-sm text-muted-foreground">
-        two of your own notes, one new concept.
+      <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
+        {example.definition}
       </p>
     </motion.div>
   );
