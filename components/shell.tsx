@@ -28,7 +28,7 @@ export function Shell({
           </div>
         )}
         {activeTab === "connect" && (
-          <div className="mx-auto flex min-h-[70vh] max-w-3xl items-center justify-center">
+          <div className="mx-auto flex h-full max-w-3xl flex-col">
             <ConnectView cards={cards} />
           </div>
         )}
